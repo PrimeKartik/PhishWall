@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhishWall // Cyber Defense</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #ff5f00;
+            /* Solar Orange */
+            --secondary: #0a0a0a;
+            /* Void Black */
+            --bg: #ffffff;
+            /* Pure White */
+            --surface: rgba(0, 0, 0, 0.03);
+            --border: rgba(0, 0, 0, 0.1);
+            --text-main: #0a0a0a;
+            --text-dim: #666666;
+            --safe: #2ed573;
+            --warn: #ffa502;
+            --danger: #ff4757;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: default;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Ambient Background - Solar Style */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(110deg, var(--primary) 45%, var(--bg) 45.2%);
+            transition: 1.2s cubic-bezier(0.8, 0, 0.2, 1);
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            mask-image: radial-gradient(circle at center, black, transparent 80%);
+            opacity: 0.3;
+        }
+
+        /* Header */
+        nav {
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 32px;
+            height: 32px;
+            border: 2px solid var(--primary);
+            position: relative;
+        }
+
+        .logo-box::after {
+            content: '';
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            width: 8px;
+            height: 8px;
+            background: var(--secondary);
+        }
+
+        /* Main Layout */
+        main {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: calc(100vh - 200px);
+            padding: 40px 60px;
+            align-items: center;
+            gap: 100px;
+            flex: 1;
+        }
+
+        .hero-section h1 {
+            font-size: 6rem;
+            line-height: 0.9;
+            margin-bottom: 24px;
+            font-weight: 900;
+        }
+
+        .hero-section span {
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: var(--text-dim);
+            max-width: 500px;
+            line-height: 1.6;
+        }
+
+        .scan-module::before {
+            content: 'SECURE_CHANNEL_v2';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            opacity: 0.5;
+        }
+
+        .scan-module {
+            background: #0a0a0a;
+            /* Command module block */
+            padding: 40px;
+            border-radius: 40px 4px;
+            box-shadow: 25px 25px 0px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea {
+            width: 100%;
+            height: 180px;
+            background: #111;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 20px;
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            transition: 0.3s;
+            margin-bottom: 20px;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+        }
+
+        .btn-scan {
+            width: 100%;
+            background: var(--primary);
+            color: var(--bg);
+            border: none;
+            padding: 20px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .btn-scan:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 242, 255, 0.4);
+        }
+
+        /* Examples & History Section at the Bottom */
+        .bottom-section {
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 40px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+        }
+
+        .extra-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-width: 600px;
+        }
+
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .chip {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px;
+        }
+
+        .chip:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(0, 242, 255, 0.05);
+        }
+
+        /* Result Modal/Panel */
+        #resultPane {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 80vh;
+            background: #ffffff;
+            z-index: 1000;
+            border-top: 10px solid var(--secondary);
+            padding: 80px 60px;
+            transition: 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 60px;
+            box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        #resultPane.active {
+            bottom: 0;
+        }
+
+        .gauge-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .gauge-svg {
+            width: 350px;
+            filter: drop-shadow(0 0 20px var(--primary));
+        }
+
+        .score-val {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-top: -80px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .report {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: var(--danger);
+            color: white;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            width: fit-content;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .report h2 {
+            font-size: 4rem;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            color: var(--secondary);
+        }
+
+        .reasons {
+            list-style: none;
+            margin-bottom: 40px;
+        }
+
+        .reasons li {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .reasons li::before {
+            content: '>';
+            color: var(--primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: 1px solid var(--primary);
+            color: var(--primary);
+            padding: 16px 40px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            width: fit-content;
+        }
+
+        .btn-close:hover {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        .hero-section {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Alarming Warning Mode */
+        @keyframes pulse-red {
+            0% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 30px rgba(255, 71, 87, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 71, 87, 0);
+            }
+        }
+
+        .warning-mode #resultPane {
+            background: #1a0000 !important;
+            border-top: 10px solid var(--danger) !important;
+        }
+
+        .warning-mode #statusTitle {
+            color: var(--danger) !important;
+            text-shadow: 0 0 20px rgba(255, 71, 87, 0.5);
+        }
+
+        .warning-mode .score-val {
+            animation: pulse-red 2s infinite;
+            border-radius: 50%;
+        }
+
+        .btn-report {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 16px;
+        }
+
+        .btn-report:hover {
+            transform: scale(1.05);
+            background: #ff5e6c;
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+                height: auto;
+                padding-bottom: 100px;
+                gap: 40px;
+            }
+
+            .hero-section h1 {
+                font-size: 4rem;
+            }
+
+            #resultPane {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="ambient-bg"></div>
+    <div class="grid-overlay"></div>
+
+    <nav>
+        <div class="logo">
+            <div class="logo-box" style="border-color: #fff;"></div>
+            <span style="color: #fff;">PhishWall</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 24px;">
+            <div class="lang-switcher" style="display: flex; gap: 8px;">
+                <button onclick="setLanguage('en')" id="btn-en"
+                    style="background: var(--secondary); color: #fff; border: none; padding: 4px 12px; border-radius: 4px; font-weight: 700; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">EN</button>
+                <button onclick="setLanguage('hi')" id="btn-hi"
+                    style="background: transparent; color: var(--secondary); border: 1px solid var(--secondary); padding: 4px 12px; border-radius: 4px; font-weight: 700; cursor: pointer; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;">HI</button>
+            </div>
+            <span id="system-time"
+                style="font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--secondary); opacity: 0.8;">SYSTEM_STABLE
+                // 2026</span>
+        </div>
+    </nav>
+
+    <main>
+        <div class="hero-section">
+            <h1 id="hero-title" style="color: #fff; text-shadow: 12px 12px 0px var(--secondary);">Defend
+                Your<br><span style="color: #fff;">Digital Border.</span></h1>
+            <p id="hero-desc" style="color: #333; font-weight: 600;">PhishWall uses heuristic neural-mapping to
+                identify malicious links and fraudulent intent before they
+                compromise your data.</p>
+        </div>
+
+        <div class="scan-module">
+            <textarea id="scanInput" placeholder="Enter URL or suspicious SMS message..."></textarea>
+            <button class="btn-scan" onclick="executeScan()">Initiate Neural Scan</button>
+        </div>
+    </main>
+
+    <div class="bottom-section">
+        <div class="extra-section">
+            <div>
+                <div class="section-label" id="label-examples">Try Examples</div>
+                <div class="chip-container" id="examples-chips">
+                    <div class="chip" onclick="useExample('http://g00gle-login.tk')">g00gle-login.tk</div>
+                    <div class="chip"
+                        onclick="useExample('URGENT: Your account is blocked. Verify now: http://bit.ly/3xY')">
+                        Suspicious SMS</div>
+                    <div class="chip" onclick="useExample('https://paypal.com/secure/login')">Secure Link</div>
+                </div>
+            </div>
+
+            <div id="history-container" style="display: none;">
+                <div class="section-label" id="label-history">Recent Scans</div>
+                <div class="chip-container" id="history-chips"></div>
+            </div>
+        </div>
+        <div style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--text-dim); opacity: 0.5;">
+            PHISHWALL_V2 // ENCRYPTION_ACTIVE
+        </div>
+    </div>
+
+    <div id="resultPane">
+        <div class="gauge-wrap">
+            <svg class="gauge-svg" viewBox="0 0 200 120">
+                <path d="M 30 100 A 70 70 0 0 1 170 100" fill="none" stroke="#f0f0f0" stroke-width="12"
+                    stroke-linecap="round" />
+                <path id="gaugePath" d="M 30 100 A 70 70 0 0 1 170 100" fill="none" stroke="var(--primary)"
+                    stroke-width="12" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220"
+                    style="transition: 1.5s cubic-bezier(0.23, 1, 0.32, 1);" />
+            </svg>
+            <div class="score-val" id="scoreVal">00</div>
+            <p
+                style="text-transform: uppercase; letter-spacing: 4px; font-size: 0.8rem; margin-top: 20px; color: var(--text-dim) !important;">
+                Threat Index</p>
+        </div>
+
+        <div class="report">
+            <div class="status-badge" id="riskBadge">High Risk</div>
+            <h2 id="statusTitle">Analysis Results</h2>
+            <ul class="reasons" id="reasonList">
+                <li>Detected brand impersonation pattern.</li>
+                <li>Suspicious top-level domain extension.</li>
+            </ul>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                <a href="https://www.sancharsaathi.gov.in/sfc/" target="_blank" class="btn-report" id="btnReport"
+                    style="display: none;">
+                    ⚠️ REPORT THIS LINK
+                </a>
+                <button class="btn-close" id="btn-reset" onclick="closeResult()">Clear Buffer & Reset</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                heroTitle: 'Defend Your<br><span style="color: #fff;">Digital Border.</span>',
+                heroDesc: 'PhishWall uses heuristic neural-mapping to identify malicious links and fraudulent intent before they compromise your data.',
+                placeholder: 'Enter URL or suspicious SMS message...',
+                btnScan: 'Initiate Neural Scan',
+                statusTitle: 'Analysis Results',
+                btnReset: 'Clear Buffer & Reset',
+                threatIndex: 'Threat Index',
+                scanning: 'SCANNING_THREAT_VECTORS...',
+                riskLevel: 'LEVEL',
+                results: {
+                    'SAFE': 'SAFE',
+                    'SUSPICIOUS': 'SUSPICIOUS',
+                    'PHISHING / FRAUD': 'PHISHING / FRAUD'
+                },
+                labelExamples: 'Try Examples',
+                labelHistory: 'Recent Scans',
+                exampleSms: 'Suspicious SMS',
+                exampleSecure: 'Secure Link',
+                btnReport: '⚠️ REPORT TO CYBERSEC',
+                warningMsg: 'CRITICAL THREAT DETECTED'
+            },
+            hi: {
+                heroTitle: 'अपनी डिजिटल<br><span style="color: #fff;">सीमा की रक्षा करें।</span>',
+                heroDesc: 'PhishWall आपके डेटा के साथ समझौता होने से पहले दुर्भावनापूर्ण लिंक और धोखाधड़ी के इरादे की पहचान करने के लिए अनुमानी तंत्रिका-मानचित्रण का उपयोग करता है।',
+                placeholder: 'यूआरएल या संदिग्ध एसएमएस संदेश दर्ज करें...',
+                btnScan: 'न्यूरल स्कैन शुरू करें',
+                statusTitle: 'विश्लेषण परिणाम',
+                btnReset: 'बफर साफ़ करें और रीसेट करें',
+                threatIndex: 'थ्रेट इंडेक्स',
+                scanning: 'थ्रेट वेक्टर स्कैनिंग...',
+                riskLevel: 'स्तर',
+                results: {
+                    'SAFE': 'सुरक्षित',
+                    'SUSPICIOUS': 'संदिग्ध',
+                    'PHISHING / FRAUD': 'फ़िशिंग / धोखाधड़ी'
+                },
+                labelExamples: 'उदाहरणों को आजमाएं',
+                labelHistory: 'हाल की जांच',
+                exampleSms: 'संदिग्ध एसएमएस',
+                exampleSecure: 'सुरक्षित लिंक',
+                btnReport: '⚠️ साइबर क्राइम रिपोर्ट करें',
+                warningMsg: 'गंभीर खतरा पाया गया'
+            }
+        };
+
+        let currentLang = 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            const t = translations[lang];
+
+            document.getElementById('hero-title').innerHTML = t.heroTitle;
+            document.getElementById('hero-desc').innerText = t.heroDesc;
+            document.getElementById('scanInput').placeholder = t.placeholder;
+            document.querySelector('.btn-scan').innerText = t.btnScan;
+            document.getElementById('statusTitle').innerText = t.statusTitle;
+            document.getElementById('btn-reset').innerText = t.btnReset;
+            document.querySelector('.gauge-wrap p').innerText = t.threatIndex;
+
+            document.getElementById('label-examples').innerText = t.labelExamples;
+            document.getElementById('label-history').innerText = t.labelHistory;
+
+            // Re-render example chips to update text
+            const exampleChips = document.getElementById('examples-chips');
+            exampleChips.innerHTML = `
+                <div class="chip" onclick="useExample('http://g00gle-login.tk')">g00gle-login.tk</div>
+                <div class="chip" onclick="useExample('URGENT: Your account is blocked. Verify now: http://bit.ly/3xY')">${t.exampleSms}</div>
+                <div class="chip" onclick="useExample('https://paypal.com/secure/login')">${t.exampleSecure}</div>
+            `;
+
+            // Toggle button styles
+            const btnEn = document.getElementById('btn-en');
+            const btnHi = document.getElementById('btn-hi');
+
+            if (lang === 'en') {
+                btnEn.style.background = 'var(--secondary)';
+                btnEn.style.color = '#fff';
+                btnHi.style.background = 'transparent';
+                btnHi.style.color = 'var(--secondary)';
+                btnHi.style.border = '1px solid var(--secondary)';
+            } else {
+                btnHi.style.background = 'var(--secondary)';
+                btnHi.style.color = '#fff';
+                btnEn.style.background = 'transparent';
+                btnEn.style.color = 'var(--secondary)';
+                btnEn.style.border = '1px solid var(--secondary)';
+            }
+            document.getElementById('btnReport').innerText = t.btnReport;
+        }
+
+        function useExample(val) {
+            document.getElementById('scanInput').value = val;
+            executeScan();
+        }
+
+        let scanHistory = [];
+
+        async function executeScan() {
+            const input = document.getElementById('scanInput').value;
+            if (!input) return;
+
+            // Add to history
+            if (!scanHistory.includes(input)) {
+                scanHistory.unshift(input);
+                if (scanHistory.length > 5) scanHistory.pop();
+                updateHistoryUI();
+            }
+
+            const btn = document.querySelector('.btn-scan');
+            const originalText = btn.innerText;
+            btn.innerText = translations[currentLang].scanning;
+            btn.style.opacity = "0.5";
+
+            const formData = new FormData();
+            formData.append("input_text", input);
+
+            try {
+                const response = await fetch("/scan", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+
+                setTimeout(() => {
+                    renderResult(data);
+                    btn.innerText = translations[currentLang].btnScan;
+                    btn.style.opacity = "1";
+                }, 800);
+
+            } catch (err) {
+                console.error(err);
+                alert("Neural link failed. Check server status.");
+            }
+        }
+
+        function animateScore(target) {
+            const obj = document.getElementById('scoreVal');
+            let current = 0;
+            const duration = 1500; // Match gauge animation duration
+            const start = performance.now();
+
+            function step(now) {
+                const elapsed = now - start;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Cubic ease-out: starts fast, slows down at the end
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                current = Math.floor(easeOut * target);
+
+                obj.innerText = current.toString().padStart(2, '0');
+
+                if (progress < 1) {
+                    requestAnimationFrame(step);
+                }
+            }
+            requestAnimationFrame(step);
+        }
+
+        function renderResult(data) {
+            const pane = document.getElementById('resultPane');
+            const gauge = document.getElementById('gaugePath');
+            const score = document.getElementById('scoreVal');
+            const badge = document.getElementById('riskBadge');
+            const list = document.getElementById('reasonList');
+            const title = document.getElementById('statusTitle');
+
+            // Set content
+            score.innerText = "00";
+            setTimeout(() => animateScore(data.risk_score), 200);
+            title.innerText = translations[currentLang].results[data.result] || data.result;
+            badge.innerText = `${data.risk_level} ${translations[currentLang].riskLevel}`;
+            list.innerHTML = data.reasons.map(r => `<li>${r}</li>`).join('');
+
+            // Color logic
+            let color = 'var(--safe)';
+            if (data.risk_score >= 60) color = 'var(--danger)';
+            else if (data.risk_score >= 30) color = 'var(--warn)';
+
+            badge.style.background = color;
+            gauge.style.stroke = color;
+            score.style.color = color;
+
+            // Gauge animation (circumference is ~220)
+            const offset = 220 - (data.risk_score / 100) * 220;
+            gauge.style.strokeDashoffset = offset;
+
+            // Warning Mode logic
+            const reportBtn = document.getElementById('btnReport');
+            if (data.risk_score >= 70) {
+                document.body.classList.add('warning-mode');
+                reportBtn.style.display = 'inline-flex';
+                title.innerText = translations[currentLang].warningMsg;
+            } else {
+                document.body.classList.remove('warning-mode');
+                reportBtn.style.display = 'none';
+                title.innerText = translations[currentLang].results[data.result] || data.result;
+            }
+
+            pane.classList.add('active');
+        }
+
+        function closeResult() {
+            document.body.classList.remove('warning-mode');
+            document.getElementById('resultPane').classList.remove('active');
+            document.getElementById('gaugePath').style.strokeDashoffset = 220;
+            document.getElementById('scoreVal').innerText = "00";
+            document.getElementById('scanInput').value = "";
+        }
+
+        function updateHistoryUI() {
+            const container = document.getElementById('history-container');
+            const chips = document.getElementById('history-chips');
+
+            if (scanHistory.length === 0) {
+                container.style.display = 'none';
+                return;
+            }
+
+            container.style.display = 'block';
+            chips.innerHTML = scanHistory.map(item => {
+                const display = item.length > 20 ? item.substring(0, 20) + '...' : item;
+                return `<div class="chip" onclick="useExample('${item.replace(/'/g, "\\'")}')" title="${item}">${display}</div>`;
+            }).join('');
+        }
+
+        // Live Clock
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('system-time').innerText = `SYSTEM_ACTIVE // ${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+        }, 1000);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,190 @@
+/* PhishWall Premium Content Styles */
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
+.phiswall-warning-overlay {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    width: 380px;
+    background: #0f1110;
+    color: #ffffff;
+    z-index: 2147483647;
+    border-radius: 12px;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    font-family: 'Outfit', sans-serif;
+    padding: 24px;
+    overflow: hidden;
+    border-left: 6px solid #11c05d;
+    animation: phiswall-slide-in 0.6s cubic-bezier(0.85, 0, 0.15, 1);
+}
+
+.phiswall-warning-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 0;
+    background: none;
+}
+
+.phiswall-warning-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #11c05d;
+}
+
+.phiswall-content-body {
+    padding: 0;
+}
+
+.phiswall-risk-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.phiswall-risk-high {
+    background: #ff4757;
+    color: white;
+}
+
+.phiswall-risk-suspicious {
+    background: #ffa502;
+    color: #0a0a0a;
+}
+
+.phiswall-risk-low {
+    background: #11c05d;
+    color: white;
+}
+
+.phiswall-reasons {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 25px 0;
+}
+
+.phiswall-reasons li {
+    font-size: 14px;
+    color: #cccccc;
+    padding: 6px 0;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.phiswall-reasons li::before {
+    content: '>';
+    color: #ff5f00;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: bold;
+}
+
+.phiswall-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.phiswall-btn {
+    flex: 1;
+    padding: 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 900;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.phiswall-btn-proceed {
+    background: transparent;
+    border: 1px solid #ddd;
+    color: #888;
+}
+
+.phiswall-btn-proceed:hover {
+    background: #f5f5f5;
+    color: #0a0a0a;
+}
+
+.phiswall-btn-block {
+    background: #ff5f00;
+    color: white;
+}
+
+.phiswall-btn-block:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 95, 0, 0.4);
+}
+
+@keyframes phiswall-slide-in {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes phiswall-fade-out {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+.phiswall-blocked-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    z-index: 2147483647;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Outfit', sans-serif;
+    text-align: center;
+    padding: 40px;
+    background: linear-gradient(160deg, #ffffff 50%, #ff5f00 50.2%);
+}
+
+.phiswall-blocked-screen h1 {
+    font-size: 64px;
+    font-weight: 900;
+    color: #0a0a0a;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.phiswall-warning-box {
+    background: #0a0a0a;
+    padding: 40px;
+    border-radius: 40px 4px;
+    color: white;
+    max-width: 600px;
+    box-shadow: 25px 25px 0px rgba(0, 0, 0, 0.1);
+}
