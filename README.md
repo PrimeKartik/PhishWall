@@ -8,40 +8,48 @@ pinned: false
 app_port: 7860
 ---
 
-# PhishWall 🛡️
+<div align="center">
+  
+# 🛡️ PhishWall
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square&logo=python)](https://www.python.org/)
-[![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)]()
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Hugging%20Face-ffcc00?style=flat-square&logo=huggingface)](https://primekartik-phishwall.hf.space)
+[![License: MIT](https://img.shields.io/badge/License-MIT-success?style=flat-square)](https://opensource.org/licenses/MIT)
 
-> **Enterprise-grade neural wall against phishing and SMS fraud.**
+**Enterprise-grade neural wall against phishing and SMS fraud.** <br>
+*PhishWall is a modular, high-performance security engine designed to detect phishing URLs and fraudulent SMS patterns in real-time.*
 
-PhishWall is a modular, high-performance security engine designed to detect phishing URLs and fraudulent SMS patterns in real-time. Built with FastAPI and advanced heuristic analysis, it provides a robust first line of defense against modern cyber threats.
+</div>
+
+---
+
+## 🔴 Live Demo
+
+You can try the live production environment hosted on Hugging Face Spaces:
+
+**[🔗 Access PhishWall Live System](https://primekartik-phishwall.hf.space)**
+
+*(Note: The first request may take a few seconds as the server wakes up. All subsequent requests are fast).*
 
 ---
 
 ## 🚀 Key Features
 
-*   **URL Intelligence**: Detects typosquatting, brand impersonation, suspicious TLDs, and IP-based attacks.
-*   **SMS Fraud Engine**: Analyzes urgency tactics, financial bait, UPI scam patterns, and multi-language (Hinglish/Hindi) threats.
-*   **Neural UI**: A high-impact, responsive dashboard for real-time analysis built with modern glassmorphism.
-*   **FastAPI Backend**: Industry-standard high performance, data validation with Pydantic, and automated OpenAPI documentation.
-*   **Modular Architecture**: Built with easily extensible detection engines.
-*   **Browser Extension**: Includes a Chrome extension (`phiswall_extension`) for seamless real-time browser protection.
+* **Advanced URL Intelligence**: Detects typosquatting, brand impersonation, deceptive TLDs, and IP-based attacks.
+* **SMS Fraud Engine**: Analyzes urgency tactics, financial bait, UPI scam patterns, and multi-language (Hinglish/Hindi) threats.
+* **Neural Dashboard**: A high-impact, responsive UI for real-time analysis built with modern glassmorphism aesthetics.
+* **REST Ecosystem**: Built with modern standard FastAPI high-performance architecture, robust data validation using Pydantic, and automated OpenAPI specs.
+* **Chrome Extension Ready**: Seamlessly integrates directly into your browser context for real-time browsing protection.
 
 ---
 
-## 💻 API Usage
+## 💻 API Documentation
 
-You can directly interact with the PhishWall engine via its HTTP API hosted on this Space.
+PhishWall exposes a robust HTTP API for integration with other apps or services.
 
 **Endpoint:** `POST /scan`
 
-**Input (Form Data):**
-*   `input_text`: The URL or SMS content to scan.
-
-**Example Request:**
+### Example Request (`curl`)
 ```bash
 curl -X 'POST' \
   'https://primekartik-phishwall.hf.space/scan' \
@@ -50,7 +58,7 @@ curl -X 'POST' \
   -d 'input_text=http://www.g00gle-login-update.com'
 ```
 
-**Example Response:**
+### JSON Response Structure
 ```json
 {
   "input": "http://www.g00gle-login-update.com",
@@ -68,22 +76,49 @@ curl -X 'POST' \
 
 ---
 
-## 🏗️ Project Architecture
+## 🛠️ Local Development & Setup
+
+If you wish to run the engine locally for development:
+
+### 1. Backend Server Setup
+```bash
+# Clone the repository
+git clone https://github.com/PrimeKartik/PhishWall.git
+cd PhishWall
+
+# Install required dependencies
+pip install -r requirements.txt
+
+# Start the FastAPI engine
+python app.py
+```
+* **Dashboard:** Open `http://localhost:8000`
+* **API Swagger UI:** Open `http://localhost:8000/docs`
+
+### 2. Browser Extension Installation
+1. Navigate to `chrome://extensions/` in your Chrome browser.
+2. Enable **Developer mode** in the top-right corner.
+3. Click **Load unpacked** and select the `phiswall_extension` folder from this directory.
+4. Update the endpoint in your extension's background script to communicate with either your `localhost` or the **Live Demo URL**.
+
+---
+
+## 🏗️ Architecture Stack
+
+PhishWall's codebase is heavily modularized for future scaling:
 
 ```text
 phishwall/
-├── src/                  # Core Application Source
-│   ├── engines/          # Detection Logic
-│   │   ├── url_engine.py # URL/Domain heuristics
+├── src/                  # Core Intelligence Source
+│   ├── engines/          # Detection Logic Models
+│   │   ├── url_engine.py # URL/Domain heuristic tree
 │   │   └── sms_engine.py # SMS text heuristics
-│   └── config.py         # Global rules and configuration
-├── static/               # Frontend Assets (HTML, CSS, JS)
-│   └── index.html        # Neural UI dashboard
-├── phiswall_extension/   # Chrome browser extension
-├── tests/                # Unit & Integration tests
-├── app.py                # Main FastAPI Server entry point
-├── Dockerfile            # Hugging Face deployment logic
-└── requirements.txt      # Python dependencies
+│   └── config.py         # Global rules and thresholds
+├── static/               # Neural UI Assets (HTML, CSS, JS)
+│   └── index.html        # Main dashboard
+├── phiswall_extension/   # Manifest V3 Chrome Extension
+├── Dockerfile            # Hugging Face deployment container
+└── app.py                # Core routing engine (FastAPI)
 ```
 
 ---
@@ -91,10 +126,13 @@ phishwall/
 ## 🛡️ Security Roadmap
 
 - [x] Integrate Browser extension for real-time protection.
-- [ ] Integration with Google Safe Browsing API.
-- [ ] Machine Learning model for deep context URL analysis.
-- [ ] User authentication and scan history tracking.
+- [x] Containerize application and push to Hugging Face production space.
+- [ ] Implement Google Safe Browsing API integration.
+- [ ] Train Machine Learning models for deep-context URL tracking.
+- [ ] Add JWT User Authentication & Historical Logging.
 
 ---
 
-*Developed with ❤️ by the PhishWall Security Team.*
+<div align="center">
+  <i>Developed with ❤️ by the PhishWall Security Team</i>
+</div>
