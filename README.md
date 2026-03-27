@@ -1,8 +1,19 @@
+---
+title: PhishWall Engine
+emoji: 🛡️
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+app_port: 7860
+---
+
 # PhishWall 🛡️
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.9+-blue?style=flat-square&logo=python)](https://www.python.org/)
 [![Status](https://img.shields.io/badge/Status-Active-success?style=flat-square)]()
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Hugging%20Face-ffcc00?style=flat-square&logo=huggingface)](https://primekartik-phishwall.hf.space)
 
 > **Enterprise-grade neural wall against phishing and SMS fraud.**
 
@@ -21,47 +32,9 @@ PhishWall is a modular, high-performance security engine designed to detect phis
 
 ---
 
-## 🛠️ Tech Stack
-
-*   **Backend**: Python 3.9+, FastAPI, Pydantic, Uvicorn
-*   **Frontend**: Vanilla HTML5, CSS3, JavaScript (ES6+)
-*   **Extension**: Chrome Extension API (Manifest V3)
-*   **Analysis Logic**: Rule-based heuristics, fuzzy string matching (`difflib`), Regex pattern detection.
-
----
-
-## 📦 Installation & Setup
-
-### 1. Backend Server Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/your-repo/phishwall.git
-cd phishwall
-
-# Install required dependencies
-pip install -r requirements.txt
-
-# Start the FastAPI engine
-python app.py
-```
-
-*   **UI Dashboard:** Open `http://localhost:8000`
-*   **API Documentation:** Open `http://localhost:8000/docs`
-
-### 2. Browser Extension Setup
-
-1. Open Google Chrome and navigate to `chrome://extensions/`.
-2. Enable **Developer mode** in the top right corner.
-3. Click on **Load unpacked**.
-4. Select the `phiswall_extension` folder located inside the repository.
-5. The extension will now communicate with your local FastAPI server to provide real-time protection!
-
----
-
 ## 💻 API Usage
 
-You can directly interact with the PhishWall engine via its HTTP API.
+You can directly interact with the PhishWall engine via its HTTP API hosted on this Space.
 
 **Endpoint:** `POST /scan`
 
@@ -71,7 +44,7 @@ You can directly interact with the PhishWall engine via its HTTP API.
 **Example Request:**
 ```bash
 curl -X 'POST' \
-  'http://localhost:8000/scan' \
+  'https://primekartik-phishwall.hf.space/scan' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -d 'input_text=http://www.g00gle-login-update.com'
@@ -109,6 +82,7 @@ phishwall/
 ├── phiswall_extension/   # Chrome browser extension
 ├── tests/                # Unit & Integration tests
 ├── app.py                # Main FastAPI Server entry point
+├── Dockerfile            # Hugging Face deployment logic
 └── requirements.txt      # Python dependencies
 ```
 
